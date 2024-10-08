@@ -1,0 +1,4 @@
+.COM (.Command) File
+
+1. Load at addr @ 0x0100
+2. Execute from te begin of the executable file

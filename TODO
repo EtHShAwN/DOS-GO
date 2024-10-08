@@ -1,0 +1,81 @@
+# DOS-GO Documentation
+
+## Overview
+
+This project is a simple DOS emulator that can run your DOS program from command line without launching any Virtual Machine.
+
+## Features
+
+1. **Load Our Program** - [Working]
+   1. Analyze the executable header
+   2. Allocate sufficient memory for the program
+   3. Emulate soft & hard interrupts
+      - **Todo**: Load .EXE files is not supported yet
+
+2. **Execute Every Machine Code** - [Working]
+   1. `mov` instruction
+   2. `add` instruction
+   3. `jmp` instruction
+
+3. **Graphics Program** - [Not Yet Implemented]
+
+---
+
+## Detailed Breakdown
+
+### 1. Load Our Program
+
+When the emulator starts, it performs the following steps:
+
+- **Analyze the Executable Header**: 
+  - Reads the header of the executable file to understand its structure and required resources.
+  
+- **Allocate Sufficient Memory for Program**: 
+  - Reserves memory space (640KB) needed for the program's execution based on the information obtained from the header.
+  
+- **Emulate Interrupts**: 
+  - Sets up a basic system for handling interrupts, allowing the program to request services from the operating system (or emulator).
+
+> **Note**: Only .COM file is support Now. Support for loading .EXE files is currently under development.
+
+### 2. Execute Every Machine Code
+
+The core functionality of the emulator includes the ability to interpret and execute specific machine code instructions:
+
+- **MOV Instruction**: 
+  - Implements moving data between registers and memory locations.
+
+- **ADD Instruction**: 
+  - Supports addition operations between different registers.
+
+- **JMP Instruction**: 
+  - Provides the capability to jump to different code segments within the program.
+
+### 3. Graphics Program
+
+Currently, the graphics functionality is not implemented. Future work may include:
+
+- Rendering simple graphics or text-based user interfaces.
+- Implementing graphical output capabilities to enhance the usability of the emulator.
+
+---
+
+## Roadmap
+
+| Task                         | Status          | Notes                                                      |
+|------------------------------|-----------------|------------------------------------------------------------|
+| Load .EXE File               | Not Supported    | Functionality to be implemented in future versions.        |
+| Execute MOV Instructions      | Working         | Fully functional.                                          |
+| Execute ADD Instructions      | Working         | Fully functional.                                          |
+| Execute JMP Instructions      | Working         | Fully functional.                                          |
+| Implement Graphics            | Not Yet Implemented | To be developed in later stages.                            |
+
+---
+
+
+## License
+
+This project is licensed under the Apache License - see the [LICENSE](LICENSE) file for details.
+
+
+Feel free to customize this documentation further to match the specifics of your project and any additional features or changes you plan to implement!
