@@ -1,6 +1,6 @@
 # DOS-GO
 
-**DOS-GO** is a lightweight DOS emulator designed to load and execute DOS programs. It provides basic functionality for executing machine code instructions such as MOV, ADD, and JMP. This project aims to create an environment where users can run simple DOS applications.
+**DOS-GO** is a lightweight DOS emulator designed to load and execute DOS programs. It provides basic functionality for executing some MS-DOS executables.
 
 ## Features
 
