@@ -5,16 +5,6 @@
 
 FILE* executable = NULL;
 
-void movRegImm(reg16* reg, unsigned char* RAM,reg16* IP){
-    *reg = (RAM[*IP+2] << 8) + RAM[*IP+1];
-    *IP += 2;
-}
-
-void movReg8Addr(unsigned char* RAM,reg16* IP){
-    RAM[*IP];
-}
-
-
 void parseArgument(int argc,char* argv[]){
     for (int i = 1; i < argc; i++){
         if(argv[i][0] != '-'){
@@ -62,7 +52,11 @@ int main(int argc,char* argv[]){
         return 1;
     }
 
-    bytesRead = fread(Buf,sizeof(unsigned char),10,executable);
+    fseek(executable, 0, SEEK_END);
+    size_t fileSize = ftell(executable);
+    fseek(executable, 0, SEEK_SET);
+
+    bytesRead = fread(Buf,sizeof(unsigned char),fileSize,executable);
 
     //start CPU
     CPU_State = CPU_State_Running;
@@ -83,41 +77,49 @@ int main(int argc,char* argv[]){
         
         unsigned currentIP = CS*0x10 + IP;
 
+        if (CPU_State == CPU_State_Halt) {
+            puts("CPU Halted");
+            while (CPU_State == CPU_State_Halt) {
+                nop();  //yup literally do nothing...
+            }
+        }
+        
+
         // mov reg,imm
         if(RAM[currentIP] >= OPCODE_MOV_AX && RAM[currentIP] <= OPCODE_MOV_DI){
             switch (RAM[currentIP])
             {
             case OPCODE_MOV_AX:
                 movRegImm(&AX,RAM,&IP);
-                printf("MOV AX,0x%04x\n",AX);
+                printf("MOV AX,0x%04X\n",AX);   //debug output
                 break;
             case OPCODE_MOV_BX:
                 movRegImm(&BX,RAM,&IP);
-                printf("MOV BX,0x%04x\n",BX);
+                printf("MOV BX,0x%04X\n",BX);   //debug output
                 break;
             case OPCODE_MOV_CX:
                 movRegImm(&CX,RAM,&IP);
-                printf("MOV CX,0x%04x\n",CX);
+                printf("MOV CX,0x%04X\n",CX);   //debug output
                 break;
             case OPCODE_MOV_DX:
                 movRegImm(&DX,RAM,&IP);
-                printf("MOV DX,0x%04x\n",DX);
+                printf("MOV DX,0x%04X\n",DX);   //debug output
                 break;
             case OPCODE_MOV_BP:
                 movRegImm(&BP,RAM,&IP);
-                printf("MOV BP,0x%04x\n",BP);
+                printf("MOV BP,0x%04X\n",BP);   //debug output
                 break;
             case OPCODE_MOV_SP:
                 movRegImm(&SP,RAM,&IP);
-                printf("MOV SP,0x%04x\n",SP);
+                printf("MOV SP,0x%04X\n",SP);   //debug output
                 break;
             case OPCODE_MOV_DI:
                 movRegImm(&DI,RAM,&IP);
-                printf("MOV DI,0x%04x\n",DI);
+                printf("MOV DI,0x%04X\n",DI);   //debug output
                 break;
             case OPCODE_MOV_SI:
                 movRegImm(&SI,RAM,&IP);
-                printf("MOV SI,0x%04x\n",SI);
+                printf("MOV SI,0x%04X\n",SI);   //debug output
                 break;
             default:
                 puts("invalid mov opcode");
@@ -125,10 +127,29 @@ int main(int argc,char* argv[]){
             }
         }
 
-        if(RAM[currentIP] == OPCODE_MOV_REG8_ADDR){
-            movReg8Addr(RAM,&IP);
-        }
+        switch(RAM[currentIP]){
+            case OPCODE_MOV_AX_ADDR:{
+                movAxAddr(RAM,&AX,&IP);
+                break;
+            }
+            case OPCODE_MOV_AL_ADDR:{
+                movAlAddr(RAM,&AX,&IP);
+                break;
+            }
+            case OPCODE_MOV_REG8_ADDR:{
+                movReg8Addr(RAM,&IP);
+                break;
+            }
 
+            case OPCODE_NOP:{
+                nop();
+                break;
+            }
+
+            default:
+                break;
+        }
+        // printf("current IP:%04x\topcode:%04x\n",IP,RAM[currentIP]);
         IP++;
     }
 
