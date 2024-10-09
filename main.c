@@ -83,12 +83,8 @@ int main(int argc,char* argv[]){
                 nop();  //yup literally do nothing...
             }
         }
-        
 
-        // mov reg,imm
-        if(RAM[currentIP] >= OPCODE_MOV_AX && RAM[currentIP] <= OPCODE_MOV_DI){
-            switch (RAM[currentIP])
-            {
+        switch(RAM[currentIP]){
             case OPCODE_MOV_AX:
                 movRegImm(&AX,RAM,&IP);
                 printf("MOV AX,0x%04X\n",AX);   //debug output
@@ -121,30 +117,30 @@ int main(int argc,char* argv[]){
                 movRegImm(&SI,RAM,&IP);
                 printf("MOV SI,0x%04X\n",SI);   //debug output
                 break;
-            default:
-                puts("invalid mov opcode");
-                break;
-            }
-        }
-
-        switch(RAM[currentIP]){
-            case OPCODE_MOV_AX_ADDR:{
+            case OPCODE_MOV_AX_ADDR:
                 movAxAddr(RAM,&AX,&IP);
                 break;
-            }
-            case OPCODE_MOV_AL_ADDR:{
+            case OPCODE_MOV_AL_ADDR:
                 movAlAddr(RAM,&AX,&IP);
                 break;
-            }
-            case OPCODE_MOV_REG8_ADDR:{
+            case OPCODE_MOV_REG8_ADDR:
                 movReg8Addr(RAM,&IP);
                 break;
-            }
-
-            case OPCODE_NOP:{
+            case OPCODE_MOV_ADDR_AL:
+                movAddrAl(RAM,&AX,&IP);
+                break;
+            case OPCODE_MOV_ADDR_AX:
+                movAddrAx(RAM,&AX,&IP);
+                break;
+            case OPCODE_ADD_DST_REG8:
+                parseModRM(RAM[IP++]);
+                break;
+            case OPCODE_HLT:
+                hlt(&CPU_State);
+                puts("HLT");                //debug output
+            case OPCODE_NOP:
                 nop();
                 break;
-            }
 
             default:
                 break;

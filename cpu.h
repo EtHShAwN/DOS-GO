@@ -3,11 +3,19 @@
 
 typedef unsigned short int reg16;
 
+/* MODR/M mask */
+#define MODRM_MODE_MASK 0xC0
+#define MODRM_REG_MASK  0x38
+#define MODRM_RM_MASK   0x07
+
 #define CPU_State_Failure 0x00
 #define CPU_State_Running 0x01
 #define CPU_State_Halt    0x02
 #define CPU_State_SoftIRQ 0x03
 #define CPU_State_HardIRQ 0x04
+
+/* add dst,reg8 */
+#define OPCODE_ADD_DST_REG8 0x00
 
 /* mov reg,imm */
 #define OPCODE_MOV_AX 0xB8
@@ -39,6 +47,11 @@ extern void hlt(int* CPU_State);
 extern void movReg8Addr(unsigned char* RAM,reg16* IP);
 extern void movAxAddr(unsigned char* RAM,reg16* AX,reg16* IP);
 extern void movAlAddr(unsigned char* RAM,reg16* AX,reg16* IP);
+extern void movAddrAl(unsigned char* RAM,reg16* AX,reg16* IP);
+extern void movAddrAx(unsigned char* RAM,reg16* AX,reg16* IP);
 extern void movRegImm(reg16* reg, unsigned char* RAM,reg16* IP);
+extern void addReg8Reg8(unsigned char* RAM,reg16* IP,reg16* src,reg16* dst);
+
+extern unsigned char parseModRM(unsigned char modRM, unsigned char* regIndex, unsigned char* rmIndex);
 
 #endif
